@@ -10,3 +10,4 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'haml-rails'
 gem 'rinruby'
+gem 'rails_12factor', group: :production
