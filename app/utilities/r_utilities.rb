@@ -1,4 +1,8 @@
 class RUtilities
+  def self.r
+    @r ||= RinRuby.new(false, false) # output, interactive mode
+  end
+
   def self.extension_of_series(series, additional_items = 10)
     if series.empty?
       return (1..additional_items).map { 0 }
@@ -7,8 +11,6 @@ class RUtilities
     while series.length < 4 # If there are less than four elements, the R code will fail. Pad the series with existing elements to appease it.
       series.unshift series.first
     end
-
-    r = RinRuby.new(false, false) # output, interactive mode
 
     r.series = series
 
