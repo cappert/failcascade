@@ -13,7 +13,7 @@ class Alliance
   end
 
   def self.update_from_file(path)
-    api_equivalent = MultiXml.parse(File.read path)['eveapi']['result']['rowset']['row']
+    api_equivalent = MultiXml.parse(File.read path)['eveapi']
     update_and_predict api_equivalent
   end
 
@@ -28,20 +28,22 @@ class Alliance
 
   private
 
-  def self.update_and_predict(api_rows)
-    update_time = Time.current
-    extract_data_from(api_rows).each do |data|
+  def self.update_and_predict(api_response)
+    rows, update_time = extract_data_from api_response
+    rows.each do |data|
       alliance = where(_id: data['allianceID']).first_or_initialize
       alliance.name = data['name']
       alliance.ticker = data['shortName']
       alliance.updated_at = update_time
       alliance.actual_member_count[update_time.to_date] = data['memberCount'].to_i
-      alliance.update_predictions
+      # alliance.update_predictions
       alliance.save
     end
   end
 
-  def self.extract_data_from(api_rows)
-    api_rows.map{ |row| row.slice *%w(name shortName allianceID memberCount) }
+  def self.extract_data_from(api_response)
+    time = Time.parse "#{api_response['currentTime']} UTC"
+    rows = api_response['result']['rowset']['row'].map{ |row| row.slice *%w(name shortName allianceID memberCount) }
+    return rows, time
   end
 end

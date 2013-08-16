@@ -4,6 +4,6 @@ class EveApi
 
   def self.alliances
     result = get '/eve/AllianceList.xml.aspx'
-    result['eveapi']['result']['rowset']['row']
+    result['eveapi']
   end
 end
