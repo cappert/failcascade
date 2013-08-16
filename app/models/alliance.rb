@@ -26,6 +26,10 @@ class Alliance
     end
   end
 
+  def remove_duplicates
+    Alliance.where(ticker: self.ticker).nin(_id: self._id).destroy_all
+  end
+
   private
 
   def self.update_and_predict(api_response)
@@ -37,6 +41,7 @@ class Alliance
       alliance.updated_at = update_time
       alliance.actual_member_count[update_time.to_date] = data['memberCount'].to_i
       alliance.update_predictions
+      alliance.remove_duplicates
       alliance.save
     end
   end
