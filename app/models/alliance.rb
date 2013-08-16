@@ -36,7 +36,7 @@ class Alliance
       alliance.ticker = data['shortName']
       alliance.updated_at = update_time
       alliance.actual_member_count[update_time.to_date] = data['memberCount'].to_i
-      # alliance.update_predictions
+      alliance.update_predictions
       alliance.save
     end
   end
