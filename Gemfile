@@ -10,7 +10,7 @@ gem 'jquery-rails'
 gem 'turbolinks'
 gem 'haml-rails'
 gem 'rinruby'
-gem 'rails_12factor', group: :production
+gem 'rails_stdout_logging', group: :production
 gem 'httparty'
 gem 'mongoid', github: 'mongoid/mongoid'
 gem 'bson_ext'
