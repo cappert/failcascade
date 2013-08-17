@@ -31,6 +31,13 @@ class Alliance
     Alliance.where(ticker: self.ticker).nin(_id: self._id).destroy_all
   end
 
+  def chart_series
+    [
+      { name: 'Actual',    data: actual_member_count.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] } },
+      { name: 'Predicted', data: predicted_member_count.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] } }
+    ]
+  end
+
   private
 
   def self.update_and_predict(api_response)

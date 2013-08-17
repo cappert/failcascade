@@ -2,3 +2,5 @@
   = @alliance.name
   %small
     = "<#{@alliance.ticker}>"
+
+.chart{ data: { series: @alliance.chart_series.to_json } }

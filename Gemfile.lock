@@ -58,6 +58,8 @@ GEM
       activesupport (>= 3.1, < 4.1)
       haml (>= 3.1, < 4.1)
       railties (>= 3.1, < 4.1)
+    highcharts-rails (3.0.3)
+      railties (>= 3.1)
     hike (1.2.3)
     httparty (0.11.0)
       multi_json (~> 1.0)
@@ -130,6 +132,7 @@ DEPENDENCIES
   bson_ext
   coffee-rails (~> 4.0.0)
   haml-rails
+  highcharts-rails
   httparty
   jquery-rails
   mongoid!

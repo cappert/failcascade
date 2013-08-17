@@ -14,3 +14,4 @@ gem 'rails_stdout_logging', group: :production
 gem 'httparty'
 gem 'mongoid', github: 'mongoid/mongoid'
 gem 'bson_ext'
+gem 'highcharts-rails'
