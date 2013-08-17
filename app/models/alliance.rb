@@ -4,6 +4,7 @@ class Alliance
   field :_id, type: String
   field :name, type: String
   field :ticker, type: String
+  field :current_member_count, type: Integer
   field :actual_member_count, type: Hash, default: ->{ {} }
   field :predicted_member_count, type: Hash, default: ->{ {} }
   field :updated_at, type: ActiveSupport::TimeWithZone
@@ -36,12 +37,16 @@ class Alliance
     rows, update_time = extract_data_from api_response
     rows.each do |data|
       alliance = where(_id: data['allianceID']).first_or_initialize
+
       alliance.name = data['name']
       alliance.ticker = data['shortName']
       alliance.updated_at = update_time
+      alliance.current_member_count = data['memberCount'].to_i
       alliance.actual_member_count[update_time.to_date] = data['memberCount'].to_i
+
       alliance.update_predictions
       alliance.remove_duplicates
+
       alliance.save
     end
   end
