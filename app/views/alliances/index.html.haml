@@ -1,9 +1,10 @@
-%h1
-  failcascade
-  %small
-    is
-    = @alliances.sample.ticker
-    dead yet?
+%form
+  %h1
+    failcascade
+    %small
+      is
+      %input#search-field{ type: 'text', name: 'q' }
+      dead yet?
 
 .row
   .col-md-2.col-sm-3

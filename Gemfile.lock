@@ -108,6 +108,9 @@ GEM
       railties (>= 4.0.0.beta, < 5.0)
       sass (>= 3.1.10)
       sprockets-rails (~> 2.0.0)
+    select2-rails (3.4.8)
+      sass-rails
+      thor (~> 0.14)
     sprockets (2.10.0)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -145,4 +148,5 @@ DEPENDENCIES
   rails_12factor
   rinruby
   sass-rails
+  select2-rails
   uglifier
