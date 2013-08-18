@@ -10,20 +10,27 @@ class Alliance
   field :updated_at, type: ActiveSupport::TimeWithZone
 
   def self.update_from_api
-    update_and_predict EveApi.alliances
+    update_from EveApi.alliances
+    update_predictions
   end
 
-  def self.update_from_file(path)
-    api_equivalent = MultiXml.parse(File.read path)['eveapi']
-    update_and_predict api_equivalent
+  def self.update_from_file(path, predict: true)
+    update_from MultiXml.parse(File.read path)['eveapi']
+    update_predictions if predict
   end
 
-  def update_predictions
-    self.predicted_member_count = actual_member_count.slice updated_at.to_date
+  def self.update_predictions
+    updated_at = Alliance.max(:updated_at)
 
-    RUtilities.extension_of_series(actual_member_count.values, 4*7).each_with_index do |prediction, index|
-      prediction_date = updated_at + (index + 1).days
-      predicted_member_count[prediction_date.to_date] = prediction.to_i
+    Alliance.where(updated_at: updated_at).each do |alliance|
+      alliance.predicted_member_count = alliance.actual_member_count.slice updated_at.to_date
+
+      RUtilities.extension_of_series(alliance.actual_member_count.values, 4*7).each_with_index do |prediction, index|
+        prediction_date = updated_at + (index + 1).days
+        alliance.predicted_member_count[prediction_date] = prediction.to_i
+      end
+
+      alliance.save
     end
   end
 
@@ -33,14 +40,14 @@ class Alliance
 
   def chart_series
     [
-      { name: 'Actual',    data: actual_member_count.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] } },
-      { name: 'Predicted', data: predicted_member_count.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] } }
+      { name: 'Actual',    data: actual_member_count.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] }.sort_by{ |pair| pair.first } },
+      { name: 'Predicted', data: predicted_member_count.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] }.sort_by{ |pair| pair.first } }
     ]
   end
 
   private
 
-  def self.update_and_predict(api_response)
+  def self.update_from(api_response)
     rows, update_time = extract_data_from api_response
     rows.each do |data|
       alliance = where(_id: data['allianceID']).first_or_initialize
@@ -51,7 +58,6 @@ class Alliance
       alliance.current_member_count = data['memberCount'].to_i
       alliance.actual_member_count[update_time.to_date] = data['memberCount'].to_i
 
-      alliance.update_predictions
       alliance.remove_duplicates
 
       alliance.save
