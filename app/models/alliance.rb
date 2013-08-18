@@ -7,6 +7,7 @@ class Alliance
   field :current_member_count, type: Integer
   field :actual_member_count, type: Hash, default: ->{ {} }
   field :predicted_member_count, type: Hash, default: ->{ {} }
+  field :growth_ratio, type: Float, default: ->{ 1.0 }
   field :updated_at, type: ActiveSupport::TimeWithZone
 
   def self.update_from_api
@@ -35,9 +36,14 @@ class Alliance
   def update_predictions
     self.predicted_member_count = actual_member_count.slice actual_member_count.keys.max
 
-    RUtilities.extension_of_series(actual_member_count.sort.map{ |k,v| v }, 4*7).each_with_index do |prediction, index|
+    predictions = RUtilities.extension_of_series(actual_member_count.sort.map{ |k,v| v }, 4*7)
+    predictions = predictions.map{ |prediction| [prediction.to_i, 0].max }
+
+    self.growth_ratio = predictions.last > 0 ?  predictions.last.to_f / predictions.first.to_f : 0
+
+    predictions.each_with_index do |prediction, index|
       prediction_date = updated_at + (index + 1).days
-      self.predicted_member_count[prediction_date.to_date] = [prediction.to_i, 0].max
+      self.predicted_member_count[prediction_date.to_date] = prediction
     end
   end
 
