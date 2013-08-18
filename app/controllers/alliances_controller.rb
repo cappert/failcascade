@@ -1,8 +1,9 @@
 class AlliancesController < ApplicationController
   def index
     @alliances = Alliance.all
-    if (search_term = params[:q].to_s.strip) && search_term.present?
-      @alliances = @alliances.or({ name: /.*#{search_term}.*/i }, { ticker: /.*#{search_term}.*/i })
+    if params[:q].to_s.present?
+      regex = /.*#{Regexp.escape params[:q].to_s.strip}.*/i
+      @alliances = @alliances.or({ name: regex }, { ticker: regex })
     end
     @alliances = @alliances.desc(:current_member_count).limit(10)
 
