@@ -23,11 +23,11 @@ class Alliance
     updated_at = Alliance.max(:updated_at)
 
     Alliance.where(updated_at: updated_at).each do |alliance|
-      alliance.predicted_member_count = alliance.actual_member_count.slice updated_at.to_date
+      alliance.predicted_member_count = alliance.actual_member_count.slice alliance.actual_member_count.keys.max
 
       RUtilities.extension_of_series(alliance.actual_member_count.values, 4*7).each_with_index do |prediction, index|
         prediction_date = updated_at + (index + 1).days
-        alliance.predicted_member_count[prediction_date] = prediction.to_i
+        alliance.predicted_member_count[prediction_date] = [prediction.to_i, 0].max
       end
 
       alliance.save
