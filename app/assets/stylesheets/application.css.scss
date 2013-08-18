@@ -12,3 +12,13 @@
  *= require bootstrap
  *= require_tree .
  */
+
+dl {
+  dd {
+    text-align: right;
+  }
+}
+
+.chart {
+  height: 450px;
+}

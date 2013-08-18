@@ -1,6 +1,6 @@
 class AlliancesController < ApplicationController
   def index
-    @alliances = Alliance.all.desc(:current_member_count).limit(25)
+    @alliances = Alliance.all.desc(:current_member_count).limit(10)
   end
 
   def show

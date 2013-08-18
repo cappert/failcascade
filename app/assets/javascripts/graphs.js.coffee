@@ -10,5 +10,8 @@ jQuery ->
         title:
           text: 'Member count'
         min: 0
+      plotOptions:
+        line:
+          marker:
+            enabled: false
       series: chart.data('series')
-

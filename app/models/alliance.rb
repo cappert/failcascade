@@ -47,11 +47,19 @@ class Alliance
     end
   end
 
+  def chart_data(metric)
+    self.send(metric).sort.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] }
+  end
+
   def chart_series
     [
-      { name: 'Actual',    data: actual_member_count.sort.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] } },
-      { name: 'Predicted', data: predicted_member_count.sort.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] } }
+      { name: 'Actual',    data: chart_data(:actual_member_count) },
+      { name: 'Predicted', data: chart_data(:predicted_member_count) }
     ]
+  end
+
+  def combined_member_count
+    actual_member_count.merge predicted_member_count
   end
 
   private

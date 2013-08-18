@@ -1,6 +1,17 @@
 %h1
   = @alliance.name
   %small
-    = "<#{@alliance.ticker}>"
+    is
+    = state_of @alliance
 
-.chart{ data: { series: @alliance.chart_series.to_json } }
+.row
+  .col-md-2.col-sm-3
+    %dl
+      %dt Ticker
+      %dd= @alliance.ticker
+      %dt Current members
+      %dd= @alliance.current_member_count
+      %dt Last updated
+      %dd= I18n.l @alliance.updated_at
+  .col-md-10.col-sm-9
+    .chart{ data: { series: @alliance.chart_series.to_json } }
