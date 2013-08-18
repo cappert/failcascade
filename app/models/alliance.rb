@@ -25,7 +25,7 @@ class Alliance
     Alliance.where(updated_at: updated_at).each do |alliance|
       alliance.predicted_member_count = alliance.actual_member_count.slice alliance.actual_member_count.keys.max
 
-      RUtilities.extension_of_series(alliance.actual_member_count.values, 4*7).each_with_index do |prediction, index|
+      RUtilities.extension_of_series(alliance.actual_member_count.sort.map{ |k,v| v }, 4*7).each_with_index do |prediction, index|
         prediction_date = updated_at + (index + 1).days
         alliance.predicted_member_count[prediction_date] = [prediction.to_i, 0].max
       end
@@ -40,8 +40,8 @@ class Alliance
 
   def chart_series
     [
-      { name: 'Actual',    data: actual_member_count.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] }.sort_by{ |pair| pair.first } },
-      { name: 'Predicted', data: predicted_member_count.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] }.sort_by{ |pair| pair.first } }
+      { name: 'Actual',    data: actual_member_count.sort.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] },
+      { name: 'Predicted', data: predicted_member_count.sort.map{ |k,v| [Date.parse(k).to_time.to_i * 1000, v] }
     ]
   end
 
