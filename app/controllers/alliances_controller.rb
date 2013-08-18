@@ -4,6 +4,6 @@ class AlliancesController < ApplicationController
   end
 
   def show
-    @alliance = Alliance.where(ticker: params[:ticker]).first
+    @alliance = Alliance.where(ticker: params[:ticker].to_s.upcase).first
   end
 end

@@ -9,5 +9,6 @@ jQuery ->
       yAxis:
         title:
           text: 'Member count'
+        min: 0
       series: chart.data('series')
 
