@@ -23,7 +23,7 @@ class Alliance
   def self.update_predictions
     updated_at = Alliance.max(:updated_at)
 
-    Alliance.where(updated_at: updated_at).each do |alliance|
+    Alliance.where(updated_at: updated_at).desc(:current_member_count).each do |alliance|
       alliance.update_predictions
       alliance.save
     end
