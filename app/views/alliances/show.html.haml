@@ -1,11 +1,10 @@
-%h1
+%h2
   = @alliance.name
-  %small
-    is
-    = state_of @alliance
+%p.lead
+  = "#{@alliance.ticker} is #{state_of @alliance}"
 
 .row
-  .col-md-2.col-sm-3
+  .col-md-3.col-sm-4
     .text-center
       = image_tag "http://image.eveonline.com/alliance/#{@alliance._id}_128.png"
     %dl
@@ -13,5 +12,5 @@
       %dd= @alliance.current_member_count
       %dt Last updated
       %dd= I18n.l @alliance.updated_at
-  .col-md-10.col-sm-9
+  .col-md-9.col-sm-8
     .chart{ data: { series: @alliance.chart_series.to_json } }

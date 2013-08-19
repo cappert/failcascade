@@ -7,14 +7,15 @@
     Have you ever wondered when will this particular one go?
   .row
     .input-group.input-group-lg.col-md-6.col-sm-8.col-md-offset-3.col-sm-offset-2
-      %input.form-control.input-lg{ type: 'text', placeholder: 'Stop guessing, find out!'}
+      %form{ action: alliances_path, method: :get }
+        %input.form-control.input-lg{ type: 'text', placeholder: 'Stop guessing, find out!'}
       %span.input-group-addon
         %i.icon-search
 %hr
 .text-center
   .row
     .col-md-4.col-sm-4
-      = link_to top_alliances_path do
+      = link_to top_list_alliances_path do
         %i.icon-group.icon-4x
         %h4 Todays biggest alliances
     .col-md-4.col-sm-4

@@ -1,15 +1,18 @@
-- current_moth = nil
+%h2
+  Soon in forums near you: A Death of Alliance
+%p.lead
+  A drama in countless posts. Don't forget to bring popcorn.
 
+- current_moth = nil
 - @alliances.group_by(&:predicted_collapse).each do |date, alliances|
   - unless current_moth == date.month
     - current_moth = date.month
-    %h1= I18n.l date, format: :month
-  .row
-    .col-md-2.col-sm-2.col-xs-3.text-right
-      %h3= I18n.l date, format: :short
-    .col-md-10.col-sm-10.col-xs-9
-      - alliances.each do |alliance|
-        = link_to alliance_path(id: alliance.ticker) do
-          %h3
-            = image_tag "http://image.eveonline.com/alliance/#{alliance._id}_32.png"
-            = alliance.name
+    %h3= I18n.l date, format: :month
+  .col-md-2.col-sm-2.col-xs-3.text-right
+    %h4= I18n.l date, format: :short
+  .col-md-10.col-sm-10.col-xs-9
+    - alliances.each do |alliance|
+      = link_to alliance_path(id: alliance.ticker) do
+        %h4
+          = image_tag "http://image.eveonline.com/alliance/#{alliance._id}_32.png"
+          = alliance.name

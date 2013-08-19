@@ -1,10 +1,10 @@
-.row
-  .col-md-2.col-sm-3
-    %dl#top-alliances
-      - @alliances.each_with_index do |alliance, index|
-        %dt{ data: { index: index } }
-          = link_to alliance.name, alliance_path(id: alliance.ticker)
-        %dd
-          = alliance.current_member_count
-  .col-md-10.col-sm-9
-    #top-alliance-chart.chart{ data: { series: @alliances.map{ |alliance| { name: alliance.ticker, data: alliance.chart_data(:combined_member_count) } }.to_json } }
+%h2
+  Alliances
+- unless params[:q].to_s.blank?
+  %p.lead
+    Searching for
+    = "'#{params[:q]}'"
+    - if @alliances.empty?
+      returned no matches.
+
+= render 'list', alliances: @alliances
