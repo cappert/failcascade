@@ -4,12 +4,15 @@ class RUtilities
   end
 
   def self.extension_of_series(series, additional_items = 10)
-    if series.empty?
+    case series.length
+    when 0
       return (1..additional_items).map { 0 }
-    end
-
-    while series.length < 4 # If there are less than four elements, the R code will fail. Pad the series with existing elements to appease it.
-      series.unshift series.first
+    when 1
+      series = 7.times.map{ series.first }
+    else
+      while series.length < 7
+        series.unshift (series[0] + series[0] - series[1])
+      end
     end
 
     r.series = series
