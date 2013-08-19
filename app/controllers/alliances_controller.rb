@@ -35,6 +35,7 @@ class AlliancesController < ApplicationController
 
   def show
     @alliance = Alliance.where(ticker: params[:id].to_s.upcase).first
+    raise ActionController::RoutingError.new('Not Found') unless @alliance
   end
 
   protected
