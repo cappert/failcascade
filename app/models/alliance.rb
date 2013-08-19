@@ -5,8 +5,11 @@ class Alliance
   field :name, type: String
   field :ticker, type: String
   field :current_member_count, type: Integer
+  field :target_member_count, type: Integer
   field :actual_member_count, type: Hash, default: ->{ {} }
   field :predicted_member_count, type: Hash, default: ->{ {} }
+  field :predicted_min_member_count, type: Hash, default: ->{ {} }
+  field :predicted_max_member_count, type: Hash, default: ->{ {} }
   field :growth_ratio, type: Float, default: ->{ 1.0 }
   field :predicted_collapse, type: Date
   field :updated_at, type: ActiveSupport::TimeWithZone
@@ -35,17 +38,23 @@ class Alliance
   end
 
   def update_predictions
-    self.predicted_member_count = actual_member_count.slice actual_member_count.keys.max
+    prediction_base = actual_member_count.slice actual_member_count.keys.max
+
+    self.predicted_member_count = prediction_base.dup
+    self.predicted_min_member_count = prediction_base.dup
+    self.predicted_max_member_count = prediction_base.dup
 
     predictions = RUtilities.extension_of_series(actual_member_count.sort.map{ |k,v| v }, 4*7)
-    predictions = predictions.map{ |prediction| [prediction.to_i, 0].max }
 
     predictions.each_with_index do |prediction, index|
-      prediction_date = updated_at + (index + 1).days
-      self.predicted_member_count[prediction_date.to_date.to_s] = prediction
+      key = (updated_at + (index + 1).days).to_date.to_s
+      self.predicted_member_count[key]     = [prediction[:predicted].to_i, 0].max
+      self.predicted_min_member_count[key] = [prediction[:min].to_i, 0].max
+      self.predicted_max_member_count[key] = [prediction[:max].to_i, 0].max
     end
 
-    self.growth_ratio = predictions.last > 0 ?  predictions.last.to_f / predictions.first.to_f : 0
+    self.target_member_count = self.predicted_member_count.sort.last.last
+    self.growth_ratio = target_member_count > 0 ?  target_member_count.to_f / current_member_count.to_f : 0
     self.predicted_collapse = self.predicted_member_count.sort.find{ |date, members| members == 0 }.try :first
   end
 
@@ -55,8 +64,10 @@ class Alliance
 
   def chart_series
     [
-      { name: 'Actual',    data: chart_data(:actual_member_count) },
-      { name: 'Predicted', data: chart_data(:predicted_member_count) }
+      { name: 'Actual',      data: chart_data(:actual_member_count),        color: '#777777' },
+      { name: 'Most likely', data: chart_data(:predicted_member_count),     color: '#AAAAAA' },
+      { name: 'Worst case',  data: chart_data(:predicted_min_member_count), color: '#BD4C4C' },
+      { name: 'Best case',   data: chart_data(:predicted_max_member_count), color: '#A1D94C' }
     ]
   end
 

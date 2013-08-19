@@ -22,9 +22,17 @@ class RUtilities
 
       forecastedSeries <- forecast(ets(ts(series)), h=#{additional_items})
 
-      results <- summary(forecastedSeries)[[1]]
+      predicted <- summary(forecastedSeries)[[1]]
+      lows <- summary(forecastedSeries)[[2]]
+      highs <- summary(forecastedSeries)[[3]]
     RCODE
 
-    Array(r.results)
+    lows = Array(r.lows)
+    predicted = Array(r.predicted)
+    highs = Array(r.highs)
+
+    predicted.map.each_with_index do |prediction, index|
+      { min: lows[index], predicted: prediction, max: highs[index] }
+    end
   end
 end
