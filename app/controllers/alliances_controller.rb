@@ -1,11 +1,11 @@
 class AlliancesController < ApplicationController
+  before_filter :set_alliances, except: [:show]
+
   def index
-    @alliances = Alliance.all
     if params[:q].to_s.present?
       regex = /.*#{Regexp.escape params[:q].to_s.strip}.*/i
       @alliances = @alliances.or({ name: regex }, { ticker: regex })
     end
-    @alliances = @alliances.desc(:current_member_count).limit(10)
 
     respond_to do |format|
       format.html
@@ -15,7 +15,27 @@ class AlliancesController < ApplicationController
     end
   end
 
+  def top
+    @alliances = @alliances.desc(:current_member_count)
+    render :index
+  end
+
+  def growing
+    @alliances = @alliances.desc(:growth_ratio, :current_member_count)
+    render :index
+  end
+
+  def collapsing
+    @alliances = Alliance.all.ne(predicted_collapse: nil).asc(:predicted_collapse).desc(:current_member_count)
+  end
+
   def show
-    @alliance = Alliance.where(ticker: params[:ticker].to_s.upcase).first
+    @alliance = Alliance.where(ticker: params[:id].to_s.upcase).first
+  end
+
+  protected
+
+  def set_alliances
+    @alliances = Alliance.all.limit(10)
   end
 end

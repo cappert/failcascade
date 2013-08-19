@@ -2,3 +2,8 @@ en:
   time:
     formats:
       default: "%d.%m.%Y %H:%M"
+  date:
+    formats:
+      default: "%d.%m.%Y"
+      short: "%d.%m"
+      month: "%B"

@@ -1,17 +1,9 @@
-%form
-  %h1
-    failcascade
-    %small
-      is
-      %input#search-field{ type: 'text', name: 'q' }
-      dead yet?
-
 .row
   .col-md-2.col-sm-3
     %dl#top-alliances
       - @alliances.each_with_index do |alliance, index|
         %dt{ data: { index: index } }
-          = link_to alliance.name, alliance_path(ticker: alliance.ticker)
+          = link_to alliance.name, alliance_path(id: alliance.ticker)
         %dd
           = alliance.current_member_count
   .col-md-10.col-sm-9

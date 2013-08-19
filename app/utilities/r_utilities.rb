@@ -8,9 +8,9 @@ class RUtilities
     when 0
       return (1..additional_items).map { 0 }
     when 1
-      series = 7.times.map{ series.first }
+      series = 8.times.map{ series.first }
     else
-      while series.length < 7
+      while series.length < 8
         series.unshift (series[0] + series[0] - series[1])
       end
     end

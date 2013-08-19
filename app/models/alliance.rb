@@ -8,6 +8,7 @@ class Alliance
   field :actual_member_count, type: Hash, default: ->{ {} }
   field :predicted_member_count, type: Hash, default: ->{ {} }
   field :growth_ratio, type: Float, default: ->{ 1.0 }
+  field :predicted_collapse, type: Date
   field :updated_at, type: ActiveSupport::TimeWithZone
 
   def self.update_from_api
@@ -39,12 +40,13 @@ class Alliance
     predictions = RUtilities.extension_of_series(actual_member_count.sort.map{ |k,v| v }, 4*7)
     predictions = predictions.map{ |prediction| [prediction.to_i, 0].max }
 
-    self.growth_ratio = predictions.last > 0 ?  predictions.last.to_f / predictions.first.to_f : 0
-
     predictions.each_with_index do |prediction, index|
       prediction_date = updated_at + (index + 1).days
-      self.predicted_member_count[prediction_date.to_date] = prediction
+      self.predicted_member_count[prediction_date.to_date.to_s] = prediction
     end
+
+    self.growth_ratio = predictions.last > 0 ?  predictions.last.to_f / predictions.first.to_f : 0
+    self.predicted_collapse = self.predicted_member_count.sort.find{ |date, members| members == 0 }.try :first
   end
 
   def chart_data(metric)
