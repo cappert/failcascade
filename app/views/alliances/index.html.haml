@@ -1,9 +1,9 @@
 %h2
   Alliances
-- unless params[:q].to_s.blank?
+- unless params[:term].to_s.blank?
   %p.lead
     Searching for
-    = "'#{params[:q]}'"
+    = "'#{params[:term]}'"
     - if @alliances.empty?
       returned no matches.
 

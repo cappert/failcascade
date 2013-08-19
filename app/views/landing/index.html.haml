@@ -5,12 +5,12 @@
     All EVE Online alliances crumble. Some sooner than others.
     %br
     Have you ever wondered when will this particular one go?
-  .row
-    .input-group.input-group-lg.col-md-6.col-sm-8.col-md-offset-3.col-sm-offset-2
-      %form{ action: alliances_path, method: :get }
-        %input.form-control.input-lg{ type: 'text', placeholder: 'Stop guessing, find out!'}
-      %span.input-group-addon
-        %i.icon-search
+  %form#main-search{ action: alliances_path, method: :get }
+    .row
+      .input-group.input-group-lg.col-md-6.col-sm-8.col-md-offset-3.col-sm-offset-2
+        %input.form-control.input-lg{ type: 'text', name: 'term', placeholder: 'Stop guessing, find out!'}
+        %span.input-group-addon
+          %i.icon-search
 %hr
 .text-center
   .row

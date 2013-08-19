@@ -4,8 +4,8 @@ class AlliancesController < ApplicationController
   def index
     @alliances = @alliances.desc(:current_member_count)
 
-    if params[:q].to_s.present?
-      regex = /.*#{Regexp.escape params[:q].to_s.strip}.*/i
+    if params[:term].to_s.present?
+      regex = /.*#{Regexp.escape params[:term].to_s.strip}.*/i
       @alliances = @alliances.or({ name: regex }, { ticker: regex })
     end
 
@@ -16,7 +16,7 @@ class AlliancesController < ApplicationController
         end
       end
       format.json do
-        render json: @alliances.map{ |alliance| { id: alliance.ticker, text: "#{alliance.name} <#{alliance.ticker}>" } }
+        render json: @alliances.map{ |alliance| { value: alliance.ticker, label: "#{alliance.name} <#{alliance.ticker}>" } }
       end
     end
   end
