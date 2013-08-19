@@ -1,7 +1,7 @@
 %h2
   = @alliance.name
 %p.lead
-  = "#{@alliance.ticker} is #{state_of @alliance}"
+  = "<#{@alliance.ticker}> is #{state_of @alliance}"
 
 .row
   .col-md-3.col-sm-4
@@ -9,7 +9,9 @@
       = image_tag "http://image.eveonline.com/alliance/#{@alliance._id}_128.png"
     %dl
       %dt Current members
-      %dd= @alliance.current_member_count
+      %dd
+        = @alliance.current_member_count
+        %i.icon-user
       %dt Last updated
       %dd= I18n.l @alliance.updated_at
   .col-md-9.col-sm-8

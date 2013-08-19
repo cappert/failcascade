@@ -16,7 +16,7 @@ class AlliancesController < ApplicationController
         end
       end
       format.json do
-        render json: @alliances.map{ |alliance| { value: alliance.ticker, label: "#{alliance.name} <#{alliance.ticker}>" } }
+        render json: @alliances.map{ |alliance| { value: alliance.ticker, label: alliance.full_name } }
       end
     end
   end
@@ -34,7 +34,7 @@ class AlliancesController < ApplicationController
   end
 
   def show
-    @alliance = Alliance.where(ticker: params[:id].to_s.upcase).first
+    @alliance = Alliance.or({ticker: params[:id].to_s.upcase}, {_id: params[:id]}).first
     raise ActionController::RoutingError.new('Not Found') unless @alliance
   end
 

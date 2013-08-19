@@ -75,6 +75,10 @@ class Alliance
     actual_member_count.merge predicted_member_count
   end
 
+  def full_name
+    "#{name} <#{ticker}>"
+  end
+
   private
 
   def self.update_from(api_response)
