@@ -8,5 +8,33 @@
     = csrf_meta_tags
     %meta{ name: "viewport", content: "width=device-width, initial-scale=1.0" }
   %body
+    %nav.navbar.navbar-default
+      .container
+        .navbar-header
+          %button.navbar-toggle{ type: 'button', data: { toggle: 'collapse', target: '.navbar-collapse' } }
+            %span.sr-only
+              Toggle navigation
+            %span.icon-bar
+            %span.icon-bar
+            %span.icon-bar
+          = link_to '/', class: 'navbar-brand' do
+            failcascade
+            %i.icon-sort-by-attributes-alt
+
+        .collapse.navbar-collapse
+          %ul.nav.navbar-nav.navbar-right
+            %li
+              = link_to top_alliances_path do
+                %i.icon-group
+                Top 10
+            %li
+              = link_to growing_alliances_path do
+                %i.icon-rocket
+                Fastest growers
+            %li
+              = link_to collapsing_alliances_path do
+                %i.icon-signal.icon-flip-horizontal
+                Next collapses
+
     .container
       = yield

@@ -20,7 +20,7 @@ gem 'haml-rails'
 # Frontend
 gem 'jquery-rails'
 gem 'highcharts-rails'
-gem 'select2-rails'
+gem 'font-awesome-rails'
 
 group :development  do
   gem 'quiet_assets'
