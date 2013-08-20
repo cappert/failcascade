@@ -26,7 +26,7 @@ class AlliancesController < ApplicationController
   end
 
   def growing
-    @alliances = @alliances.gt(current_member_count: 100).desc(:growth_ratio, :current_member_count)
+    @alliances = @alliances.gt(current_member_count: 100, growth_ratio: 1).lt(growth_ratio: 5).desc(:growth_ratio, :current_member_count)
   end
 
   def collapsing

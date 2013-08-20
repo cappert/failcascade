@@ -12,6 +12,7 @@ class Alliance
   field :predicted_max_member_count, type: Hash, default: ->{ {} }
   field :growth_ratio, type: Float, default: ->{ 1.0 }
   field :predicted_collapse, type: Date
+  field :established, type: Date
   field :updated_at, type: ActiveSupport::TimeWithZone
 
   def self.update_from_api
@@ -91,6 +92,7 @@ class Alliance
       alliance.updated_at = update_time
       alliance.current_member_count = data['memberCount'].to_i
       alliance.actual_member_count[update_time.to_date] = data['memberCount'].to_i
+      alliance.established = data['startDate']
 
       alliance.remove_duplicates
 
@@ -100,7 +102,7 @@ class Alliance
 
   def self.extract_data_from(api_response)
     time = Time.parse "#{api_response['currentTime']} UTC"
-    rows = api_response['result']['rowset']['row'].map{ |row| row.slice *%w(name shortName allianceID memberCount) }
+    rows = api_response['result']['rowset']['row'].map{ |row| row.slice *%w(name shortName allianceID memberCount startDate) }
     return rows, time
   end
 end
