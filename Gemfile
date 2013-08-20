@@ -18,6 +18,7 @@ gem 'uglifier'
 gem 'haml-rails'
 
 # Frontend
+gem 'jquery-rails'
 gem 'highcharts-rails'
 
 group :development  do
