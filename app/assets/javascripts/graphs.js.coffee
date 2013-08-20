@@ -1,5 +1,5 @@
 jQuery ->
-  plotLines = [ { color: '#AAAAAA', width: 1, value: $('body').data('downtimestamp') } ]
+  plotLines = [ { color: '#777777', width: 1, value: $('body').data('downtimestamp') } ]
   $('.chart').each ->
     chart = $ this
     chart.highcharts
