@@ -1,12 +1,14 @@
 class Alliance
   include Mongoid::Document
 
+  INSIGNIFICANCE = 50
+
   field :_id, type: String
   field :name, type: String
   field :ticker, type: String
   field :current_member_count, type: Integer
   field :target_member_count, type: Integer
-  field :peak_member_count, type: Integer
+  field :peak_member_count, type: Integer, default: ->{ 0 }
   field :actual_member_count, type: Hash, default: ->{ {} }
   field :predicted_member_count, type: Hash, default: ->{ {} }
   field :predicted_min_member_count, type: Hash, default: ->{ {} }

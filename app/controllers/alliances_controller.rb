@@ -26,11 +26,11 @@ class AlliancesController < ApplicationController
   end
 
   def growing
-    @alliances = @alliances.gt(current_member_count: 100, growth_ratio: 1).lt(growth_ratio: 5).desc(:growth_ratio, :current_member_count)
+    @alliances = @alliances.gt(current_member_count: Alliance::INSIGNIFICANCE, growth_ratio: 1).lt(growth_ratio: 5).desc(:growth_ratio, :current_member_count)
   end
 
   def collapsing
-    @alliances = Alliance.all.ne(predicted_collapse: nil).asc(:predicted_collapse).desc(:current_member_count)
+    @alliances = Alliance.all.gt(peak_member_count: Alliance::INSIGNIFICANCE).ne(predicted_collapse: nil).asc(:predicted_collapse).desc(:current_member_count)
   end
 
   def show
