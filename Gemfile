@@ -18,10 +18,7 @@ gem 'uglifier'
 gem 'haml-rails'
 
 # Frontend
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
 gem 'highcharts-rails'
-gem 'font-awesome-rails'
 
 group :development  do
   gem 'quiet_assets'
