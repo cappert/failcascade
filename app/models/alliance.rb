@@ -68,15 +68,19 @@ class Alliance
 
   def chart_series
     [
-      { name: 'Actual',      data: chart_data(:actual_member_count),        color: '#777777' },
-      { name: 'Most likely', data: chart_data(:predicted_member_count),     color: '#AAAAAA' },
-      { name: 'Worst case',  data: chart_data(:predicted_min_member_count), color: '#BD4C4C' },
-      { name: 'Best case',   data: chart_data(:predicted_max_member_count), color: '#A1D94C' }
+      { name: 'Actual',    data: chart_data(:actual_member_count),    color: '#777777' },
+      { name: 'Predicted', data: chart_data(:predicted_member_count), color: '#999999', zIndex: 1 },
+      { name: 'Possible',  data: predicted_member_range,              color: '#999999', zIndex: 0, type: 'arearange', linkedTo: ':previous', fillOpacity: 0.1 },
     ]
   end
 
   def combined_member_count
     actual_member_count.merge predicted_member_count
+  end
+
+  def predicted_member_range
+    max_counts = predicted_max_member_count.sort.map(&:second)
+    chart_data(:predicted_min_member_count).map.each_with_index { |pair, index| [ pair[0], pair[1], max_counts[index] ] }
   end
 
   def full_name
