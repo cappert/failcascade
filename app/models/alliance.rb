@@ -60,10 +60,7 @@ class Alliance
   end
 
   def chart_data(metric)
-    self.send(metric).sort.map do |k,v|
-      time = Date.parse(k).to_time + 11.hours
-      [time.to_i * 1000, v]
-    end
+    self.send(metric).sort.map { |k,v| [ Date.parse(k).downtimestamp, v ] }
   end
 
   def chart_series

@@ -1,4 +1,5 @@
 jQuery ->
+  plotLines = [ { color: '#AAAAAA', width: 1, value: $('body').data('downtimestamp') } ]
   $('.chart').each ->
     chart = $ this
     chart.highcharts
@@ -6,6 +7,7 @@ jQuery ->
         text: null
       xAxis:
         type: 'datetime'
+        plotLines: plotLines
       yAxis:
         title:
           text: 'Member count'
