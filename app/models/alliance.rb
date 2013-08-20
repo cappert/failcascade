@@ -6,6 +6,7 @@ class Alliance
   field :ticker, type: String
   field :current_member_count, type: Integer
   field :target_member_count, type: Integer
+  field :peak_member_count, type: Integer
   field :actual_member_count, type: Hash, default: ->{ {} }
   field :predicted_member_count, type: Hash, default: ->{ {} }
   field :predicted_min_member_count, type: Hash, default: ->{ {} }
@@ -97,6 +98,7 @@ class Alliance
       alliance.current_member_count = data['memberCount'].to_i
       alliance.actual_member_count[update_time.to_date] = data['memberCount'].to_i
       alliance.established = data['startDate']
+      alliance.peak_member_count = [ alliance.peak_member_count, alliance.current_member_count ].max
 
       alliance.remove_duplicates
 
