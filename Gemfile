@@ -19,6 +19,7 @@ gem 'haml-rails'
 
 # Frontend
 gem 'jquery-rails'
+gem 'jquery-ui-rails'
 gem 'highcharts-rails'
 
 group :development  do

@@ -11,6 +11,7 @@
 // about supported directives.
 //
 //= require jquery_ujs
+//= require jquery.ui.autocomplete
 //= require highcharts
 //= require highcharts/highcharts-more
 //= require_tree .
