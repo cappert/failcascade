@@ -8,13 +8,31 @@
     .text-center
       = image_tag "http://image.eveonline.com/alliance/#{@alliance._id}_128.png"
     %dl
-      %dt Current members
+      %dt
+        Current members
       %dd
         = @alliance.current_member_count
         %i.icon-user
-      %dt Established
-      %dd= l @alliance.established
-      %dt Last updated
-      %dd= l @alliance.updated_at
+      %dt
+        Established
+      %dd
+        = l @alliance.established
+      - if @alliance.predicted_collapse
+        %dt
+          Last member to leave
+        %dd
+          = l @alliance.predicted_collapse
+      %dt
+        More information
+      %dd
+        = link_to "http://evemaps.dotlan.net/alliance/#{@alliance._id}", target: '_blank' do
+          DOTLAN
+          %i.icon-share-alt
+      %dt
+        Killboard
+      %dd
+        = link_to "http://zkillboard.com/alliance/#{@alliance._id}", target: '_blank' do
+          zKillboard
+          %i.icon-share-alt
   .col-md-9.col-sm-8
     .chart{ data: { series: @alliance.chart_series.to_json } }
