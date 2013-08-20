@@ -23,15 +23,15 @@
 
         .collapse.navbar-collapse
           %ul.nav.navbar-nav.navbar-right
-            %li
+            %li{ class: action_name == 'top_list' ? 'active' : nil }
               = link_to top_list_alliances_path do
                 %i.icon-group
                 Top 10 alliances
-            %li
+            %li{ class: action_name == 'growing' ? 'active' : nil }
               = link_to growing_alliances_path do
                 %i.icon-rocket
                 Fastest growers
-            %li
+            %li{ class: action_name == 'collapsing' ? 'active' : nil }
               = link_to collapsing_alliances_path do
                 %i.icon-calendar
                 Next collapses
