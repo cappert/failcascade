@@ -13,8 +13,8 @@
         = @alliance.current_member_count
         %i.icon-user
       %dt Established
-      %dd= I18n.l @alliance.established
+      %dd= l @alliance.established
       %dt Last updated
-      %dd= I18n.l @alliance.updated_at
+      %dd= l @alliance.updated_at
   .col-md-9.col-sm-8
     .chart{ data: { series: @alliance.chart_series.to_json } }

@@ -7,9 +7,9 @@
 - @alliances.group_by(&:predicted_collapse).each do |date, alliances|
   - unless current_moth == date.month
     - current_moth = date.month
-    %h3= I18n.l date, format: :month
+    %h3= l date, format: :month
   .col-md-2.col-sm-2.col-xs-3.text-right
-    %h4= I18n.l date, format: :short
+    %h4= l date, format: :short
   .col-md-10.col-sm-10.col-xs-9
     - alliances.each do |alliance|
       = link_to alliance_path(id: alliance.ticker) do

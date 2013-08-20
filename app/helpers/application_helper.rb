@@ -9,4 +9,8 @@ module ApplicationHelper
     else 'growing rapidly'
     end
   end
+
+  def l(date, *args)
+    date.present? ? super : ''
+  end
 end
