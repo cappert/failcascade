@@ -38,6 +38,9 @@
 
     .container
       = yield
+    .footer
+      by
+      = link_to 'Slvrsmth', 'https://gate.eveonline.com/Profile/Slvrsmth/', target: '_blank'
 
     - if Rails.env.production?
       :javascript
