@@ -9,5 +9,6 @@ Bundler.require(:default, Rails.env)
 
 module Failcascade
   class Application < Rails::Application
+    config.cache_store = :dalli_store
   end
 end

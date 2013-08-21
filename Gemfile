@@ -4,6 +4,7 @@ ruby '2.0.0'
 
 gem 'rails', '4.0.0'
 
+# Mongo
 gem 'mongoid', github: 'mongoid/mongoid'
 gem 'bson_ext'
 
@@ -24,6 +25,11 @@ gem 'highcharts-rails'
 
 # Monitoring
 gem 'newrelic_rpm'
+
+# Caching
+gem 'rack-cache'
+gem 'memcachier'
+gem 'dalli'
 
 group :development  do
   gem 'quiet_assets'
