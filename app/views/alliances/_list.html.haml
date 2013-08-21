@@ -8,4 +8,4 @@
           = alliance.current_member_count
           %i.icon-user
   .col-md-9.col-sm-8
-    #top-alliance-chart.chart{ data: { series: alliances.map{ |alliance| { name: alliance.ticker, data: alliance.chart_data(:combined_member_count) } }.to_json } }
+    #top-alliance-chart.chart{ data: { updatestamp: alliances.first.try(:updatestamp), series: alliances.map{ |alliance| { name: alliance.ticker, data: alliance.chart_data(:combined_member_count) } }.to_json } }

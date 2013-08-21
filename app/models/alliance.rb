@@ -87,6 +87,10 @@ class Alliance
     "#{name} <#{ticker}>"
   end
 
+  def updatestamp
+    updated_at && updated_at.to_date.downtimestamp
+  end
+
   private
 
   def self.update_from(api_response)
