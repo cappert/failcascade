@@ -38,10 +38,6 @@
 
     .container
       = yield
-    .footer.text-center
-      = link_to 'https://twitter.com/tmikoss', target: '_blank' do
-        %i.icon-twitter
-        tmikoss
 
     - if Rails.env.production?
       :javascript
