@@ -1,4 +1,5 @@
 class AlliancesController < ApplicationController
+  before_filter :allow_caching, only: [ :top_list, :growing, :collapsing, :show ]
   before_filter :set_alliances, except: [:show]
 
   def index
