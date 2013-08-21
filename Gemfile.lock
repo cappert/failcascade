@@ -79,6 +79,7 @@ GEM
     moped (1.5.1)
     multi_json (1.7.9)
     multi_xml (0.5.3)
+    newrelic_rpm (3.6.6.147)
     origin (1.1.0)
     polyglot (0.3.3)
     quiet_assets (1.0.2)
@@ -144,6 +145,7 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   mongoid!
+  newrelic_rpm
   quiet_assets
   rails (= 4.0.0)
   rails_12factor
