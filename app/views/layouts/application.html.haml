@@ -41,6 +41,8 @@
     .footer
       by
       = link_to 'Slvrsmth', 'https://gate.eveonline.com/Profile/Slvrsmth/', target: '_blank'
+      %small
+        = link_to 'about this site', about_path
 
     - if Rails.env.production?
       :javascript
