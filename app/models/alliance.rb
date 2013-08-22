@@ -19,20 +19,26 @@ class Alliance
   field :updated_at, type: ActiveSupport::TimeWithZone
 
   def self.update_from_api
-    update_from EveApi.alliances
-    update_predictions
-  end
+    rows, update_time = extract_data_from EveApi.alliances
 
-  def self.update_from_file(path, predict: true)
-    update_from MultiXml.parse(File.read path)['eveapi']
-    update_predictions if predict
-  end
+    rows.each_with_index do |data, index|
+      p "#{index}..." if index % 100 == 0
 
-  def self.update_predictions
-    Alliance.desc(:current_member_count).each do |alliance|
-      next unless alliance.should_update_predictions?
-      alliance.update_predictions
+      alliance = where(_id: data['allianceID']).first_or_initialize
+
+      alliance.name = data['name']
+      alliance.ticker = data['shortName']
+      alliance.updated_at = update_time
+      alliance.current_member_count = data['memberCount'].to_i
+      alliance.actual_member_count[update_time.to_date.to_s] = data['memberCount'].to_i
+      alliance.established = data['startDate']
+      alliance.peak_member_count = [ alliance.peak_member_count, alliance.current_member_count ].max
+
+      alliance.update_predictions if alliance.should_update_predictions?
+
       alliance.save
+
+      Alliance.where(ticker: alliance.ticker).nin(_id: alliance._id).destroy_all
     end
   end
 
@@ -91,25 +97,6 @@ class Alliance
   end
 
   private
-
-  def self.update_from(api_response)
-    rows, update_time = extract_data_from api_response
-    rows.each do |data|
-      alliance = where(_id: data['allianceID']).first_or_initialize
-
-      alliance.name = data['name']
-      alliance.ticker = data['shortName']
-      alliance.updated_at = update_time
-      alliance.current_member_count = data['memberCount'].to_i
-      alliance.actual_member_count[update_time.to_date] = data['memberCount'].to_i
-      alliance.established = data['startDate']
-      alliance.peak_member_count = [ alliance.peak_member_count, alliance.current_member_count ].max
-
-      alliance.save
-
-      Alliance.where(ticker: alliance.ticker).nin(_id: alliance._id).destroy_all
-    end
-  end
 
   def self.extract_data_from(api_response)
     time = Time.parse "#{api_response['currentTime']} UTC"
