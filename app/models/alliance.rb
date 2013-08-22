@@ -29,16 +29,15 @@ class Alliance
   end
 
   def self.update_predictions
-    updated_at = Alliance.max(:updated_at)
-
-    Alliance.where(updated_at: updated_at).desc(:current_member_count).each do |alliance|
+    Alliance.desc(:current_member_count).each do |alliance|
+      next unless alliance.should_update_predictions?
       alliance.update_predictions
       alliance.save
     end
   end
 
-  def remove_duplicates
-    Alliance.where(ticker: self.ticker).nin(_id: self._id).destroy_all
+  def should_update_predictions?
+    predicted_member_count.empty? || actual_member_count.keys.max > predicted_member_count.keys.min
   end
 
   def update_predictions
@@ -106,9 +105,9 @@ class Alliance
       alliance.established = data['startDate']
       alliance.peak_member_count = [ alliance.peak_member_count, alliance.current_member_count ].max
 
-      alliance.remove_duplicates
-
       alliance.save
+
+      Alliance.where(ticker: alliance.ticker).nin(_id: alliance._id).destroy_all
     end
   end
 
