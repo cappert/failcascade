@@ -23,7 +23,7 @@ class AlliancesController < ApplicationController
   end
 
   def top_list
-    @alliances = @alliances.desc(:current_member_count)
+    @alliances = @alliances.desc(:current_member_count, :growth_ratio)
   end
 
   def growing
@@ -32,6 +32,10 @@ class AlliancesController < ApplicationController
 
   def collapsing
     @alliances = Alliance.all.gt(peak_member_count: Alliance::INSIGNIFICANCE).ne(predicted_collapse: nil).asc(:predicted_collapse).desc(:current_member_count)
+  end
+
+  def landlords
+    @alliances = @alliances.gt(sov_held: 0).desc(:sov_held, :current_member_count)
   end
 
   def show

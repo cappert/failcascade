@@ -7,5 +7,6 @@ Failcascade::Application.routes.draw do
     get :top_list, on: :collection
     get :growing, on: :collection
     get :collapsing, on: :collection
+    get :landlords, on: :collection
   end
 end
