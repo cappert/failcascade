@@ -7,3 +7,11 @@ en:
       default: "%d.%m.%Y"
       short: "%d.%m"
       month: "%B"
+
+  mongoid:
+    attributes:
+      alliance:
+        current_member_count: Current members
+        sov_held: Sovereignty held
+        established: Established
+        predicted_collapse: Last member to leave

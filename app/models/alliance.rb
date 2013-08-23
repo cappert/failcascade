@@ -53,6 +53,10 @@ class Alliance
     end
   end
 
+  def to_param
+    ticker
+  end
+
   def should_update_predictions?
     predicted_member_count.empty? || actual_member_count.keys.max > predicted_member_count.keys.min
   end

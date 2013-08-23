@@ -8,26 +8,12 @@
     .text-center
       = image_tag "http://image.eveonline.com/alliance/#{@alliance._id}_128.png"
     %dl
-      %dt
-        Current members
-      %dd
-        = @alliance.current_member_count
-        %i.icon-user
+      = attribute @alliance, :current_member_count
       - if @alliance.sov_held > 0
-        %dt
-          Sovereignty held
-        %dd
-          = @alliance.sov_held
-          %i.icon-map-marker
-      %dt
-        Established
-      %dd
-        = l @alliance.established
+        = attribute @alliance, :sov_held
+      = attribute @alliance, :established
       - if @alliance.predicted_collapse
-        %dt
-          Last member to leave
-        %dd
-          = l @alliance.predicted_collapse
+        = attribute @alliance, :predicted_collapse
       %dt
         More information
       %dd

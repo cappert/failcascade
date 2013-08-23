@@ -2,10 +2,6 @@
   .col-md-3.col-sm-4
     %dl#top-alliances
       - alliances.each_with_index do |alliance, index|
-        %dt{ data: { index: index } }
-          = link_to alliance.full_name, alliance_path(id: alliance.ticker)
-        %dd
-          = alliance.current_member_count
-          %i.icon-user
+        = attribute alliance, display, data: { index: index }, display: :link
   .col-md-9.col-sm-8
     #top-alliance-chart.chart{ data: { updatestamp: alliances.first.try(:updatestamp), series: alliances.map{ |alliance| { name: alliance.ticker, data: alliance.chart_data(:combined_member_count) } }.to_json } }
