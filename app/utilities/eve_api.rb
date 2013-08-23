@@ -3,7 +3,10 @@ class EveApi
   base_uri 'http://api.eveonline.com'
 
   def self.alliances
-    result = get '/eve/AllianceList.xml.aspx'
-    result['eveapi']
+    get('/eve/AllianceList.xml.aspx')['eveapi']
+  end
+
+  def self.sovereignty
+    get('/map/Sovereignty.xml.aspx')['eveapi']
   end
 end
