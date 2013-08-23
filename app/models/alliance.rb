@@ -16,6 +16,7 @@ class Alliance
   field :growth_ratio, type: Float, default: ->{ 1.0 }
   field :predicted_collapse, type: Date
   field :established, type: Date
+  field :sov_held, type: Integer, default: ->{ 0 }
   field :updated_at, type: ActiveSupport::TimeWithZone
 
   def self.update_from_api
@@ -39,6 +40,16 @@ class Alliance
       alliance.save
 
       Alliance.where(ticker: alliance.ticker).nin(_id: alliance._id).destroy_all
+    end
+  end
+
+  def self.count_sov
+    data = SolarSystem.count_by_holder
+
+    Alliance.nin(_id: data.keys).update_all(sov_held: 0)
+    Alliance.in(_id: data.keys).each do |alliance|
+      alliance.sov_held = data[alliance._id]
+      alliance.save
     end
   end
 

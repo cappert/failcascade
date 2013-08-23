@@ -13,6 +13,12 @@
       %dd
         = @alliance.current_member_count
         %i.icon-user
+      - if @alliance.sov_held > 0
+        %dt
+          Sovereignty held
+        %dd
+          = @alliance.sov_held
+          %i.icon-map-marker
       %dt
         Established
       %dd
