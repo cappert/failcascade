@@ -9,6 +9,7 @@ class Alliance
   field :ticker, type: String
   field :current_member_count, type: Integer
   field :target_member_count, type: Integer
+  field :member_count_delta, type: Integer, default: ->{ 0 }
   field :peak_member_count, type: Integer, default: ->{ 0 }
   field :actual_member_count, type: Hash, default: ->{ {} }
   field :predicted_member_count, type: Hash, default: ->{ {} }
@@ -31,10 +32,10 @@ class Alliance
       alliance.name = data['name']
       alliance.ticker = data['shortName']
       alliance.updated_at = update_time
-      alliance.current_member_count = data['memberCount'].to_i
       alliance.actual_member_count[update_time.to_date.to_s] = data['memberCount'].to_i
       alliance.established = data['startDate']
-      alliance.peak_member_count = [ alliance.peak_member_count, alliance.current_member_count ].max
+
+      alliance.update_metadata
 
       alliance.update_predictions if alliance.should_update_predictions?
 
@@ -58,6 +59,11 @@ class Alliance
     ticker
   end
 
+  def update_metadata
+    self.current_member_count = actual_member_count[ actual_member_count.keys.max ]
+    self.peak_member_count    = [ peak_member_count, current_member_count ].max
+  end
+
   def should_update_predictions?
     predicted_member_count.empty? || actual_member_count.keys.max > predicted_member_count.keys.min
   end
@@ -78,8 +84,11 @@ class Alliance
       self.predicted_max_member_count[key] = [prediction[:max].to_i, 0].max
     end
 
-    self.target_member_count = self.predicted_member_count.sort.last.last
+    self.target_member_count = predicted_member_count.sort.last.last
+    self.member_count_delta  = target_member_count - current_member_count
+
     self.growth_ratio = target_member_count > 0 ?  target_member_count.to_f / current_member_count.to_f : 0
+
     self.predicted_collapse = self.predicted_member_count.sort.find{ |date, members| members == 0 }.try :first
   end
 
