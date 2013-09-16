@@ -1,7 +1,8 @@
 class Alliance
   include Mongoid::Document
 
-  INSIGNIFICANCE = 50
+  INSIGNIFICANCE   = 50
+  PREDICTION_RANGE = 4*7
 
   field :_id, type: String
   field :name, type: String
@@ -68,7 +69,7 @@ class Alliance
     self.predicted_min_member_count = prediction_base.dup
     self.predicted_max_member_count = prediction_base.dup
 
-    predictions = RUtilities.extension_of_series(actual_member_count.sort.map{ |k,v| v }, 4*7)
+    predictions = RUtilities.extension_of_series(actual_member_count.sort.map{ |k,v| v }, PREDICTION_RANGE)
 
     predictions.each_with_index do |prediction, index|
       key = (updated_at + (index + 1).days).to_date.to_s
@@ -88,14 +89,18 @@ class Alliance
 
   def chart_series
     [
-      { name: 'Actual',    data: chart_data(:actual_member_count),    color: '#777777' },
-      { name: 'Predicted', data: chart_data(:predicted_member_count), color: '#999999', zIndex: 1 },
-      { name: 'Possible',  data: predicted_member_range,              color: '#999999', zIndex: 0, type: 'arearange', linkedTo: ':previous', fillOpacity: 0.1 },
+      { name: 'Actual',    data: chart_data(:limited_actual_member_count), color: '#777777' },
+      { name: 'Predicted', data: chart_data(:predicted_member_count),      color: '#999999', zIndex: 1 },
+      { name: 'Possible',  data: predicted_member_range,                   color: '#999999', zIndex: 0, type: 'arearange', linkedTo: ':previous', fillOpacity: 0.1 },
     ]
   end
 
+  def limited_actual_member_count
+    actual_member_count.slice *actual_member_count.keys.sort.last(PREDICTION_RANGE)
+  end
+
   def combined_member_count
-    actual_member_count.merge predicted_member_count
+    limited_actual_member_count.merge predicted_member_count
   end
 
   def predicted_member_range
