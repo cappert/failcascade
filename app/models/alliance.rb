@@ -3,6 +3,7 @@ class Alliance
 
   INSIGNIFICANCE   = 50
   PREDICTION_RANGE = 4*7
+  MONGODB_MAX      = 9223372036854775807
 
   field :_id, type: String
   field :name, type: String
@@ -68,6 +69,11 @@ class Alliance
     predicted_member_count.empty? || actual_member_count.keys.max > predicted_member_count.keys.min
   end
 
+  def normalized_member_count(value)
+    cap = [peak_member_count.to_i * 30, MONGODB_MAX].min
+    [[value.to_i, 0].max, cap].min
+  end
+
   def update_predictions
     prediction_base = actual_member_count.slice actual_member_count.keys.max
 
@@ -79,9 +85,9 @@ class Alliance
 
     predictions.each_with_index do |prediction, index|
       key = (updated_at + (index + 1).days).to_date.to_s
-      self.predicted_member_count[key]     = [prediction[:predicted].to_i, 0].max
-      self.predicted_min_member_count[key] = [prediction[:min].to_i, 0].max
-      self.predicted_max_member_count[key] = [prediction[:max].to_i, 0].max
+      self.predicted_member_count[key]     = normalized_member_count prediction[:predicted]
+      self.predicted_min_member_count[key] = normalized_member_count prediction[:min]
+      self.predicted_max_member_count[key] = normalized_member_count prediction[:max]
     end
 
     self.target_member_count = predicted_member_count.sort.last.last

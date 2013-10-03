@@ -20,7 +20,7 @@ class RUtilities
     r.eval <<-RCODE
       library("forecast")
 
-      forecastedSeries <- forecast(ets(ts(series)), h=#{additional_items})
+      forecastedSeries <- forecast(ets(ts(series)), h=#{additional_items}, level=c(50))
 
       predicted <- summary(forecastedSeries)[[1]]
       lows <- summary(forecastedSeries)[[2]]
