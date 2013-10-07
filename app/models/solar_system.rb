@@ -24,7 +24,7 @@ class SolarSystem
       alliance = Alliance.where(_id: data['allianceID']).first
 
       solar_system.owner_alliance_id = data['allianceID']
-      solar_system.owner_alliance_ticker = alliance.try :Aticker
+      solar_system.owner_alliance_ticker = alliance.try :ticker
 
       solar_system.save
     end

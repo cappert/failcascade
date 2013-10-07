@@ -1,7 +1,5 @@
 %h2
   = @alliance.name
-  - if @alliance.collapsed?
-    [ DEAD ]
 %p.lead
   = "<#{@alliance.ticker}> is #{state_of @alliance}"
 

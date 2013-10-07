@@ -1,7 +1,6 @@
 class Alliance
   include Mongoid::Document
 
-  INSIGNIFICANCE   = 50
   PREDICTION_RANGE = 4*7
   MONGODB_MAX      = 9223372036854775807
 
@@ -20,6 +19,7 @@ class Alliance
   field :predicted_collapse, type: Date
   field :established, type: Date
   field :collapsed, type: Boolean, default: ->{ false }
+  field :significant, type: Boolean, default: ->{ true }
   field :sov_held, type: Integer, default: ->{ 0 }
   field :updated_at, type: ActiveSupport::TimeWithZone
 
@@ -59,6 +59,14 @@ class Alliance
     end
   end
 
+  def self.noticeable
+    where(collapsed: false, significant: true)
+  end
+
+  def noticeable?
+    !collapsed? && significant?
+  end
+
   def to_param
     ticker
   end
@@ -66,10 +74,11 @@ class Alliance
   def update_metadata
     self.current_member_count = actual_member_count[ actual_member_count.keys.max ]
     self.peak_member_count    = [ peak_member_count, current_member_count ].max
+    self.significant          = current_member_count > [ peak_member_count / 15, 50 ].max
   end
 
   def should_update_predictions?
-    predicted_member_count.empty? || actual_member_count.keys.max > predicted_member_count.keys.min
+    noticeable? && (predicted_member_count.empty? || actual_member_count.keys.max > predicted_member_count.keys.min)
   end
 
   def normalized_member_count(value)
@@ -108,7 +117,7 @@ class Alliance
   def chart_series
     series = [ { name: 'Actual',    data: chart_data(:limited_actual_member_count), color: '#777777' } ]
 
-    unless collapsed?
+    if noticeable?
       series << { name: 'Predicted', data: chart_data(:predicted_member_count), color: '#999999', zIndex: 1 }
       series << { name: 'Possible',  data: predicted_member_range,              color: '#999999', zIndex: 0, type: 'arearange', linkedTo: ':previous', fillOpacity: 0.1 }
     end
