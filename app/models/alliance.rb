@@ -19,6 +19,7 @@ class Alliance
   field :growth_ratio, type: Float, default: ->{ 1.0 }
   field :predicted_collapse, type: Date
   field :established, type: Date
+  field :collapsed, type: Boolean, default: ->{ false }
   field :sov_held, type: Integer, default: ->{ 0 }
   field :updated_at, type: ActiveSupport::TimeWithZone
 
@@ -44,6 +45,8 @@ class Alliance
 
       Alliance.where(ticker: alliance.ticker).nin(_id: alliance._id).destroy_all
     end
+
+    Alliance.lt(updated_at: update_time).update_all(collapsed: true)
   end
 
   def self.count_sov
@@ -103,11 +106,14 @@ class Alliance
   end
 
   def chart_series
-    [
-      { name: 'Actual',    data: chart_data(:limited_actual_member_count), color: '#777777' },
-      { name: 'Predicted', data: chart_data(:predicted_member_count),      color: '#999999', zIndex: 1 },
-      { name: 'Possible',  data: predicted_member_range,                   color: '#999999', zIndex: 0, type: 'arearange', linkedTo: ':previous', fillOpacity: 0.1 },
-    ]
+    series = [ { name: 'Actual',    data: chart_data(:limited_actual_member_count), color: '#777777' } ]
+
+    unless collapsed?
+      series << { name: 'Predicted', data: chart_data(:predicted_member_count), color: '#999999', zIndex: 1 }
+      series << { name: 'Possible',  data: predicted_member_range,              color: '#999999', zIndex: 0, type: 'arearange', linkedTo: ':previous', fillOpacity: 0.1 }
+    end
+
+    series
   end
 
   def limited_actual_member_count
