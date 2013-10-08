@@ -9,7 +9,6 @@ class Alliance
   field :ticker, type: String
   field :current_member_count, type: Integer
   field :target_member_count, type: Integer
-  field :member_count_delta, type: Integer, default: ->{ 0 }
   field :peak_member_count, type: Integer, default: ->{ 0 }
   field :actual_member_count, type: Hash, default: ->{ {} }
   field :predicted_member_count, type: Hash, default: ->{ {} }
@@ -71,10 +70,14 @@ class Alliance
     ticker
   end
 
+  def significance_member_count
+    [ peak_member_count / 15, 50 ].max
+  end
+
   def update_metadata
     self.current_member_count = actual_member_count[ actual_member_count.keys.max ]
     self.peak_member_count    = [ peak_member_count, current_member_count ].max
-    self.significant          = current_member_count > [ peak_member_count / 15, 50 ].max
+    self.significant          = current_member_count > significance_member_count
   end
 
   def should_update_predictions?
@@ -103,11 +106,13 @@ class Alliance
     end
 
     self.target_member_count = predicted_member_count.sort.last.last
-    self.member_count_delta  = target_member_count - current_member_count
+    self.growth_ratio        = target_member_count > 0 ?  target_member_count.to_f / current_member_count.to_f : 0
 
-    self.growth_ratio = target_member_count > 0 ?  target_member_count.to_f / current_member_count.to_f : 0
-
-    self.predicted_collapse = self.predicted_member_count.sort.find{ |date, members| members == 0 }.try :first
+    if target_member_count < significance_member_count
+      self.predicted_collapse = self.predicted_member_count.sort.find{ |date, members| members < significance_member_count }.try :first
+    else
+      self.predicted_collapse = nil
+    end
   end
 
   def chart_data(metric)
