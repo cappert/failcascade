@@ -75,6 +75,10 @@ class Alliance
     [ peak_member_count / 15, SIGNIFICANT_SIZE ].max
   end
 
+  def historically_significant?
+    peak_member_count > significance_member_count
+  end
+
   def update_metadata
     self.current_member_count = actual_member_count[ actual_member_count.keys.max ]
     self.peak_member_count    = [ peak_member_count, current_member_count ].max

@@ -3,7 +3,11 @@ module ApplicationHelper
     if alliance.collapsed?
       'dead and gone'
     elsif !alliance.significant?
-      'insignificant'
+      if alliance.historically_significant?
+        'no longer relevant'
+      else
+        'insignificant'
+      end
     else
       case alliance.growth_ratio
       when (0..0.5) then 'failcascading'
