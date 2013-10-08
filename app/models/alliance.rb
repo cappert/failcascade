@@ -1,6 +1,7 @@
 class Alliance
   include Mongoid::Document
 
+  SIGNIFICANT_SIZE = 50
   PREDICTION_RANGE = 4*7
   MONGODB_MAX      = 9223372036854775807
 
@@ -71,7 +72,7 @@ class Alliance
   end
 
   def significance_member_count
-    [ peak_member_count / 15, 50 ].max
+    [ peak_member_count / 15, SIGNIFICANT_SIZE ].max
   end
 
   def update_metadata
