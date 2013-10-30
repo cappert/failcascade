@@ -32,7 +32,7 @@ class SolarSystem
 
   def self.count_by_holder
     map    = "function() { if(this.owner_alliance_id != '0'){ emit(this.owner_alliance_id, 1) } }"
-    reduce = "function(key, values) { return values.length }"
+    reduce = "function(key, values) { return Array.sum(values) }"
     map_reduce(map, reduce).out(inline: true).each_with_object({}) do |item, results|
       results[item['_id']] = item['value'].to_i
     end
