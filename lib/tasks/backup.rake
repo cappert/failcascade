@@ -10,12 +10,16 @@ namespace :backup do
 
     uri = URI.parse heroku_config['MONGOHQ_URL']
 
-    `mongodump --host #{uri.host} --port #{uri.port} -u #{uri.user} -p#{uri.password} -d #{uri.path[1..-1]} -c alliances -o #{dump_dir}`
+    %w{alliances solar_systems}.each do |collection|
+      `mongodump --host #{uri.host} --port #{uri.port} -u #{uri.user} -p#{uri.password} -d #{uri.path[1..-1]} -c #{collection} -o #{dump_dir}`
+    end
   end
 
   desc "mongorestore prod database"
   task restore_local: :environment do
-    `mongorestore -d failcascade_development #{Dir[dump_dir.join '*'].first}`
+    Dir[dump_dir.join '*'].each do |collection|
+      `mongorestore -d failcascade_development #{collection}`
+    end
   end
 
   desc "Transfer prod data to local"
