@@ -34,5 +34,7 @@ class RUtilities
     predicted.map.each_with_index do |prediction, index|
       { min: lows[index], predicted: prediction, max: highs[index] }
     end
+  rescue
+    []
   end
 end
