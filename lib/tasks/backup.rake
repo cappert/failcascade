@@ -3,7 +3,7 @@ namespace :backup do
 
   desc "mongodump prod database"
   task dump_prod: :environment do
-    heroku_config = `env -i HOME=$HOME bash  -c 'heroku config'`.split("\n")[1..-1].each_with_object({}) do |line, config|
+    heroku_config = `env -i HOME=$HOME bash  -c 'heroku config --app failcascade'`.split("\n")[1..-1].each_with_object({}) do |line, config|
       m = line.match /(?<key>[A-Z_]*):[\s]*(?<value>.*)/
       config[ m[:key] ] = m[:value]
     end
