@@ -1,1 +1,25 @@
-touch
+= failcascade
+
+== Requirements
+
+=== OS X
+
+install R from https://cran.r-project.org
+
+install mongodb: 
+  brew install mongodb [--with-openssl]
+
+== custom Rake tasks
+
+=== rake backup
+
+  rake backup:dump_prod                     # mongodump prod database
+
+  rake backup:prod_to_local                 # Transfer prod data to local
+
+  rake backup:restore_local                 # mongorestore prod database
+
+=== rake update_from_api
+
+  rake update_from_api                      # Update data from api
+
