@@ -21,9 +21,6 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'highcharts-rails'
 
-# Monitoring
-gem 'newrelic_rpm'
-
 # Caching
 gem 'rack-cache'
 gem 'memcachier'
